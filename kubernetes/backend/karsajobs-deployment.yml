@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: karsajobs
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: karsajobs
+
+  template:
+    metadata:
+      labels:
+        app: karsajobs
+
+    spec:
+      containers:
+        - name: karsajobs
+
+          # Image backend hasil build dan push.
+          image: anggraitowas/karsajobs:latest
+
+          ports:
+            - containerPort: 8080
+
+          env:
+            # Port aplikasi Karsa Jobs.
+            - name: APP_PORT
+              value: "8080"
+
+            # Nama Service MongoDB.
+            - name: MONGO_HOST
+              value: mongodb
+
+            # Username MongoDB diambil dari Secret.
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_ROOT_USERNAME
+
+            # Password MongoDB diambil dari Secret.
+            - name: MONGO_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_ROOT_PASSWORD
+
+          # Kubernetes memeriksa kesehatan aplikasi
+          # menggunakan endpoint /health.
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 20

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-configmap
+data:
+  # Konfigurasi MongoDB disediakan sebagai file.
+  # File akan di-mount ke directory /config.
+  mongo.conf: |
+    storage:
+      dbPath: /data/db

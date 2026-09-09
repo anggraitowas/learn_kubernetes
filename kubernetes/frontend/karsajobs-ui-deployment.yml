@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: karsajobs-ui
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: karsajobs-ui
+
+  template:
+    metadata:
+      labels:
+        app: karsajobs-ui
+
+    spec:
+      containers:
+        - name: karsajobs-ui
+
+          # Image frontend yang sudah di-push.
+          image: anggraitowas/karsajobs-ui:latest
+
+          ports:
+            - containerPort: 8000
