@@ -1,13 +1,14 @@
-name: Karsa Jobs Backend CI
+```yaml
+name: Karsa Jobs UI CI
 
 on:
   push:
     branches:
-      - karsajobs
+      - karsajobs-ui
 
   pull_request:
     branches:
-      - karsajobs
+      - karsajobs-ui
 
 jobs:
 
@@ -27,31 +28,15 @@ jobs:
           sudo mv hadolint /usr/local/bin/hadolint
 
       - name: Lint Dockerfile
+        working-directory: ./karsajobs-ui
         run: hadolint Dockerfile
 
-  test-app:
-    name: test-app
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v4
-
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: stable
-
-      - name: Run unit tests
-        run: go test -v -short --count=1 $(go list ./...)
-
-  build-app-karsajobs:
-    name: build-app-karsajobs
+  build-app-karsajobs-ui:
+    name: build-app-karsajobs-ui
     runs-on: ubuntu-latest
 
     needs:
       - lint-dockerfile
-      - test-app
 
     steps:
       - name: Checkout source code
@@ -66,6 +51,7 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./karsajobs-ui
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/karsajobs:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/karsajobs-ui:latest
+```
