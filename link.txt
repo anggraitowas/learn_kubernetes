@@ -1,5 +1,0 @@
-Docker Hub Backend:
-https://hub.docker.com/r/anggraitowas/karsajobs
-
-Docker Hub Frontend:
-https://hub.docker.com/r/anggraitowas/karsajobs-ui
